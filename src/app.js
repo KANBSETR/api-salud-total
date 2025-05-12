@@ -33,11 +33,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //Routes
-app.use('/api', limiter);
-app.use('/api/especialidad', limiter, especialidadRoutes);
-app.use('/api/medico', limiter, medicoRoutes);
-app.use('/api/paciente', limiter, pacienteRoutes);
-app.use('/api/prevision', limiter, previsionRoutes);
+app.use('/', limiter);
+app.use('/especialidad', limiter, especialidadRoutes);
+app.use('/medico', limiter, medicoRoutes);
+app.use('/paciente', limiter, pacienteRoutes);
+app.use('/prevision', limiter, previsionRoutes);
 
 //Error handling
 app.use((err, req, res, next) => {
