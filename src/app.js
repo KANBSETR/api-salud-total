@@ -4,16 +4,12 @@ import morgan from 'morgan';
 import cors from 'cors';
 
 //Import routes
-import especialidadRoutes from './routes/especialidad.routes.js';
-import medicoRoutes from './routes/medico.routes.js';
-import pacienteRoutes from './routes/paciente.routes.js';
-import previsionRoutes from './routes/prevision.routes.js';
 
 const app = express();
 
 //Middlewares
 app.use(cors({
-    origin: ['http://localhost:4200', '*'],
+    origin: ['http://nicodia.dev', '*'],
     credentials: true
 }));
 
@@ -23,10 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //Routes
-app.use('/api', especialidadRoutes);
-app.use('/api', medicoRoutes);
-app.use('/api', pacienteRoutes);
-app.use('/api', previsionRoutes);
+
 
 //Error handling
 app.use((err, req, res, next) => {
