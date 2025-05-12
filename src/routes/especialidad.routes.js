@@ -5,7 +5,7 @@ import { getAllEspecialidadesController } from "../controllers/especialidad.cont
 const router = Router();
 
 //Rutas
-router.get("/especialidad", getAllEspecialidadesController);
+router.get("/", getAllEspecialidadesController);
 
 
 

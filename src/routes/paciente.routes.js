@@ -6,9 +6,8 @@ const router = Router();
 
 
 // Rutas para Paciente
-router.post("/pacientes", createPacienteController);
-router.get("/pacientes", getPacientesController);
-router.put("/pacientes/:id", updatePacienteController);
-
+router.post("/create", createPacienteController);
+router.get("/", getPacientesController);
+router.put("/update/:id", updatePacienteController);
 
 export default router;

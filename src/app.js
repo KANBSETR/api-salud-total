@@ -2,6 +2,8 @@
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
+import { rateLimit } from 'express-rate-limit';
+
 
 //Import routes
 import especialidadRoutes from './routes/especialidad.routes.js';
@@ -11,22 +13,31 @@ import previsionRoutes from './routes/prevision.routes.js';
 
 const app = express();
 
-//Middlewares
+//Rate limiting middleware
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 50,
+    message: "Demasiadas peticiones desde esta IP, por favor intente más tarde",
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Middlewares
 app.use(cors({
-    origin: ['http://localhost:4200', '*'],
+    origin: ['http://nicodia.dev', '*'],
     credentials: true
 }));
 
-// Middlewares
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //Routes
-app.use('/api', especialidadRoutes);
-app.use('/api', medicoRoutes);
-app.use('/api', pacienteRoutes);
-app.use('/api', previsionRoutes);
+app.use('/api', limiter);
+app.use('/api/especialidad', limiter, especialidadRoutes);
+app.use('/api/medico', limiter, medicoRoutes);
+app.use('/api/paciente', limiter, pacienteRoutes);
+app.use('/api/prevision', limiter, previsionRoutes);
 
 //Error handling
 app.use((err, req, res, next) => {
