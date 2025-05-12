@@ -15,8 +15,8 @@ const app = express();
 
 //Rate limiting middleware
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 50,
+    windowMs: 15 * 60 * 1000,
+    max: 200,
     message: "Demasiadas peticiones desde esta IP, por favor intente más tarde",
     standardHeaders: true,
     legacyHeaders: false,
