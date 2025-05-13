@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 
 //Import routes
+import citasRoutes from './routes/citas.routes.js';
 
 const app = express();
 
@@ -19,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //Routes
-
+app.use('/citas', citasRoutes);
 
 //Error handling
 app.use((err, req, res, next) => {
