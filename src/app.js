@@ -16,7 +16,7 @@ const app = express();
 //Rate limiting middleware
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 200,
+    max: 500,
     message: "Demasiadas peticiones desde esta IP, por favor intente más tarde",
     standardHeaders: true,
     legacyHeaders: false,
@@ -34,10 +34,10 @@ app.use(express.urlencoded({ extended: false }));
 
 //Routes
 app.use('/', limiter);
-app.use('/especialidad', limiter, especialidadRoutes);
-app.use('/medico', limiter, medicoRoutes);
-app.use('/paciente', limiter, pacienteRoutes);
-app.use('/prevision', limiter, previsionRoutes);
+app.use('/especialidades', limiter, especialidadRoutes);
+app.use('/medicos', limiter, medicoRoutes);
+app.use('/pacientes', limiter, pacienteRoutes);
+app.use('/previsiones', limiter, previsionRoutes);
 
 //Error handling
 app.use((err, req, res, next) => {

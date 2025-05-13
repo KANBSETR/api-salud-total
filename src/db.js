@@ -11,7 +11,3 @@ export const pool = new pg.Pool({
         rejectUnauthorized: false
     }
 });
-
-pool.on('connect', () => {
-    console.log('connected to the db');
-});
