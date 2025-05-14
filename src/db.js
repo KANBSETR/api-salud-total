@@ -6,8 +6,17 @@ export const pool = new pg.Pool({
     user: PG_USER,
     password: PG_PASSWORD,
     database: PG_DATABASE,
-    port: PG_PORT,
-    ssl:{
-        rejectUnauthorized: false
-    }
+    port: PG_PORT
 });
+
+// Produccion
+// export const pool = new pg.Pool({
+//     host: PG_HOST,
+//     user: PG_USER,
+//     password: PG_PASSWORD,
+//     database: PG_DATABASE,
+//     port: PG_PORT,
+//     ssl:{
+//         rejectUnauthorized: false
+//     }
+// });
