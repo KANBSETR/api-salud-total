@@ -5,7 +5,7 @@ import { createAccessToken } from "../libs/jwt.js";
 export const signin = async (req, res) => {
     const { email, password } = req.body;
 
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email])
+    const result = await pool.query('SELECT * FROM usuario WHERE email = $1', [email])
     //Verificar si el usuario existe
     if (result.rows.length === 0) {
         return res.status(400).json({message: 'El correo no está registrado'});

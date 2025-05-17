@@ -10,6 +10,16 @@ export const getPacientes = async () => {
     return result.rows;
 }
 
+export const getPacienteByRut = async (rut) => {
+    const result = await pool.query("SELECT * FROM paciente WHERE rutPaciente = $1;", [rut]);
+    if (result.rowCount === 0) {
+        throw new Error("Paciente no encontrado");
+    }
+    return result.rows[0];
+}
+
+
+
 export const updatePaciente = async (id, paciente) => {
     const { nombresPaciente, apellidosPaciente, email, fecNac, telefono, direccion, estado} = paciente;
     try {

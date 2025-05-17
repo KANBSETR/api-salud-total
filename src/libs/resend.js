@@ -3,10 +3,9 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const sendEmail = async (correo, datos) => {
-    const {fecha, hora, nombreMedico, especialidad} = datos;
-
-    let textHTML = `
+export const sendEmailCita = async (correo, datos) => {
+    const { fecha, hora, nombreMedico, especialidad, token, nombrePaciente } = datos;
+    const textHTML = `
     <html>
     <head>
         <meta charset="UTF-8">
@@ -38,7 +37,7 @@ export const sendEmail = async (correo, datos) => {
     <body>
         <div class="container">
             <h1>Reserva de cita médica</h1>
-            <p>Hola,</p>
+            <p>Hola, ${nombrePaciente}</p>
             <p>Gracias por reservar una cita médica con nosotros. A continuación, encontrarás los detalles de tu cita:</p>
             <ul>
                 <li><strong>Fecha:</strong> ${fecha}</li>
@@ -48,10 +47,17 @@ export const sendEmail = async (correo, datos) => {
             </ul>
             <p>Si tienes alguna pregunta o necesitas reprogramar tu cita, no dudes en contactarnos.</p>
             <p>Saludos,<br/>El equipo de Salud Total</p>
+
+            <p>Para confirmar tu cita, haz clic en el siguiente enlace:</p>
+            <button style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                <a href="http://localhost:4000/cita/confirmar?token=${token}">Confirmar Cita</a>
+            </button>
+            <p>Si no puedes asistir a la cita, por favor cancela tu cita haciendo clic en el siguiente enlace:</p>
         </div>
     </body>
     </html>
     `;
+    // Enviar el correo electrónico
     try {
         const data = await resend.emails.send({
             from: "saludtotal@nicodia.dev",
@@ -63,6 +69,6 @@ export const sendEmail = async (correo, datos) => {
     }
     catch (error) {
         console.error("Error sending email:", error);
-        throw error;
     }
 }
+

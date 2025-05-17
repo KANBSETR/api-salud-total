@@ -3,7 +3,6 @@ import { getMedicoController } from "../controllers/medico.controller.js";
 
 const router = Router();
 
-//Get Medico
 router.get("/", getMedicoController)
 
 
