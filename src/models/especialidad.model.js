@@ -21,6 +21,6 @@ export const createEspcialidad = async (especialidad) => {
 }
 
 export const getEspecialidadById = async (id) => {
-    const result = await pool.query('SELECT * FROM especialidad WHERE idespecialidad = $1', [id]);
+    const result = await pool.query('SELECT * FROM especialidad WHERE id_especialidad = $1', [id]);
     return result.rows[0];
 };
