@@ -1,3 +1,4 @@
+import e from "express";
 import { pool } from "../db.js";
 
 // Crear un nuevo paciente
@@ -17,8 +18,6 @@ export const getPacienteByRut = async (rut) => {
     }
     return result.rows[0];
 }
-
-
 
 export const updatePaciente = async (id, paciente) => {
     const { nombresPaciente, apellidosPaciente, email, fecNac, telefono, direccion, estado} = paciente;

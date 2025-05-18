@@ -16,7 +16,7 @@ export const getCitasModel = async () => {
     return result.rows;
 }
 
-export const updateStateCitaModelConfirm = async (token_cita) => {
+export const updateStateCitaConfirmModel = async (token_cita) => {
     const result = await pool.query("UPDATE cita SET id_estado = $1 WHERE token_cita = $2 RETURNING *;", [2, token_cita]);
     if (result.rowCount === 0) {
         throw new Error("Error al actualizar el estado de la cita");
@@ -24,10 +24,36 @@ export const updateStateCitaModelConfirm = async (token_cita) => {
     return result.rows[0];
 }
 
-export const updateStateCitaModelCancel = async (token_cita) => {
+export const updateStateCitaCancelModel = async (token_cita) => {
     const result = await pool.query("UPDATE cita SET id_estado = $1 WHERE token_cita = $2 RETURNING *;", [3, token_cita]);
     if (result.rowCount === 0) {
         throw new Error("Error al actualizar el estado de la cita");
+    }
+    return result.rows[0];
+}
+
+export const getCitasByIdModel = async (id_paciente) => {
+    const result = await pool.query("SELECT * FROM cita WHERE id_paciente = $1", [id_paciente]);
+    if (result.rowCount === 0) {
+        throw new Error("No se encontraron citas para el id proporcionado");
+    }
+    return result.rows;
+}
+
+export const getCitaByIdCitaModel = async (id_cita) => {
+    const result = await pool.query("SELECT * FROM cita WHERE id_cita = $1", [id_cita]);
+    if (result.rowCount === 0) {
+        throw new Error("No se encontraron citas para el id proporcionado");
+    }
+    return result.rows[0];
+}
+
+export const updateCitaModel = async (cita) =>{
+    const { id_cita, fecha, hora, id_medico } = cita; // Se supone que el id_paciente no se puede cambiar
+    // Parsear el id a entero
+    const result = await pool.query("UPDATE cita SET fecha = $1, hora = $2, id_medico = $3, id_estado = $4 WHERE id_cita = $5 RETURNING *;", [fecha, hora, id_medico, 1, id_cita]); // id_estado = 1 (pendiente)
+    if (result.rowCount === 0) {
+        throw new Error("Error al actualizar la cita");
     }
     return result.rows[0];
 }
