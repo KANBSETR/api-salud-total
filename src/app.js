@@ -28,8 +28,7 @@ const limiter = rateLimit({
 
 // Middlewares
 app.use(cors({
-    origin: ['https://nicodia.dev', '*'],
-    credentials: true
+    origin: ['http://localhost:4200', '*']
 }));
 app.use(morgan('dev'));
 app.use(cookieParser());

@@ -15,7 +15,7 @@ import { v4 } from "uuid";
 
 
 export const createCita = async (req, res) => {
-    const { fecha, hora, rut_medico, rut_paciente, id_especialidad } = req.body;
+    const { fecha, hora, rut_medico, rut_paciente, id_especialidad, correo } = req.body;
     // Crear token para la verificación de la cita
     const token = v4();
     // Obtener los datos necesarios para crear la cita
@@ -32,7 +32,7 @@ export const createCita = async (req, res) => {
         nombre_medico: medico.primer_nombre + " " + medico.apellido_paterno,
         especialidad: especialidad.especialidad,
         nombre_paciente: paciente.primer_nombre,
-        correo: paciente.correo,
+        correo: correo,
         token: token,
     }
     // Enviar correo al usuario con la información de la cita
@@ -89,7 +89,6 @@ export const getCitasByRut = async (req, res) => {
     res.status(200).json(citas);
 }
 
-
 export const getCitaById = async (req, res) => {
     const { id_cita } = req.params;
     // Obtener la cita por id
@@ -126,4 +125,11 @@ export const updateCita = async (req, res) => {
         message: "Cita actualizada correctamente",
         data: updateCita,
     });
+}
+
+export const getCitasByIdMedico = async (req, res) => {
+    const { rut } = req.params;
+    const medico = await getMedicoByRut(rut);
+    const citas = await getCitasByIdModel(medico.id_medico);
+    res.status(200).json(citas);
 }

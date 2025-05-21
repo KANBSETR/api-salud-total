@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { getMedicoController, getMedicoByRutController } from "../controllers/medico.controller.js";
+import { getMedicoController, getMedicoByRutController, horarioMedicoController, getMedicoByIdEspecialidadController } from "../controllers/medico.controller.js";
 
 const router = Router();
 
 router.get("/", getMedicoController)
 router.get("/:rut", getMedicoByRutController)
-
+router.get("/horario/:id", horarioMedicoController)
+router.get("/idEspecialidad/:idEspecialidad", getMedicoByIdEspecialidadController)
 export default router;
