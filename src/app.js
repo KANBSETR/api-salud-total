@@ -2,6 +2,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { rateLimit } from 'express-rate-limit';
 
 
@@ -10,6 +11,9 @@ import especialidadRoutes from './routes/especialidad.routes.js';
 import medicoRoutes from './routes/medico.routes.js';
 import pacienteRoutes from './routes/paciente.routes.js';
 import previsionRoutes from './routes/prevision.routes.js';
+import citaRoutes from './routes/cita.routes.js';
+import authRoutes from './routes/auth.routes.js';
+
 
 const app = express();
 
@@ -24,11 +28,10 @@ const limiter = rateLimit({
 
 // Middlewares
 app.use(cors({
-    origin: ['http://nicodia.dev', '*'],
-    credentials: true
+    origin: ['http://localhost:4200', '*']
 }));
-
 app.use(morgan('dev'));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -38,6 +41,8 @@ app.use('/especialidades', limiter, especialidadRoutes);
 app.use('/medicos', limiter, medicoRoutes);
 app.use('/pacientes', limiter, pacienteRoutes);
 app.use('/previsiones', limiter, previsionRoutes);
+app.use('/citas', citaRoutes);
+app.use('/auth', authRoutes);
 
 //Error handling
 app.use((err, req, res, next) => {

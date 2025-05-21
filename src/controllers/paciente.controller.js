@@ -1,14 +1,26 @@
-import { getPacientes, createPaciente, updatePaciente } from "../models/paciente.model.js";
+import { getPacientes, createPaciente, updatePaciente, getPacienteByRut } from "../models/paciente.model.js";
 
 export const getPacientesController = async (req, res, next) => {
     try {
         const result = await getPacientes();
-        res.json(result.rows);
+        res.json(result);
     } catch (error) {
         next(error);
         res.status(500).json({ message: "Error fetching data" });
     }
 }
+
+export const getPacienteByRutController = async (req, res, next) => {
+    try {
+        const { rut } = req.params;
+        const result = await getPacienteByRut(rut);
+        res.json(result);
+    } catch (error) {
+        next(error);
+        res.status(500).json({ message: "Error fetching paciente" });
+    }
+}
+
 
 export const createPacienteController = async (req, res, next) => {
     try {

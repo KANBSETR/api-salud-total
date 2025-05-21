@@ -1,3 +1,4 @@
+import e from "express";
 import { pool } from "../db.js";
 
 // Crear un nuevo paciente
@@ -6,8 +7,16 @@ import { pool } from "../db.js";
 // Si hay otra cosa que hacer, se puede agregar aquí (Ahora no me acuerdo)
 
 export const getPacientes = async () => {
-    const result = await pool.query("SELECT * FROM paciente;");
+    const result = await pool.query("SELECT * FROM paciente");
     return result.rows;
+}
+
+export const getPacienteByRut = async (rut) => {
+    const result = await pool.query("SELECT * FROM paciente WHERE rut_paciente = $1;", [rut]);
+    if (result.rowCount === 0) {
+        throw new Error("No se encontró el paciente con el rut proporcionado");
+    }
+    return result.rows[0];
 }
 
 export const updatePaciente = async (id, paciente) => {
