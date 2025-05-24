@@ -1,4 +1,3 @@
-import e from "express";
 import { pool } from "../db.js";
 
 // Crear un nuevo paciente
@@ -12,7 +11,15 @@ export const getPacientes = async () => {
 }
 
 export const getPacienteByRut = async (rut) => {
-    const result = await pool.query("SELECT * FROM paciente WHERE rut_paciente = $1;", [rut]);
+    const result = await pool.query("SELECT * FROM usuario WHERE rut = $1;", [rut]);
+    if (result.rowCount === 0) {
+        throw new Error("No se encontró el paciente con el rut proporcionado");
+    }
+    return result.rows[0];
+}
+
+export const getInfoPaciente = async (id) => {
+    const result = await pool.query("SELECT * FROM paciente WHERE idusuario = $1;", [id]);
     if (result.rowCount === 0) {
         throw new Error("No se encontró el paciente con el rut proporcionado");
     }

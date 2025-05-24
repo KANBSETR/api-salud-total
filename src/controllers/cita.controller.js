@@ -7,7 +7,8 @@ import {
     getCitasModel,
     updateCitaModel,
     updateStateCitaCancelModel,
-    updateStateCitaConfirmModel
+    updateStateCitaConfirmModel,
+    getCitasPacienteByRut
 } from "../models/citas.model.js";
 import { getPacienteByRut } from "../models/paciente.model.js";
 import { getEspecialidadById } from "../models/especialidad.model.js";
@@ -21,6 +22,7 @@ export const createCita = async (req, res) => {
     // Obtener los datos necesarios para crear la cita
     const medico = await getMedicoByRut(rut_medico);
     const paciente = await getPacienteByRut(rut_paciente);
+
     const especialidad = await getEspecialidadById(id_especialidad);
 
     // Almacenar la cita en la base de datos
@@ -84,8 +86,13 @@ export const getCitas = async (req, res) => {
 
 export const getCitasByRut = async (req, res) => {
     const { rut } = req.params;
-    const paciente = await getPacienteByRut(rut);
-    const citas = await getCitasByIdModel(paciente.id_paciente);
+    // Obtener el paciente por rut
+    const citas = await getCitasPacienteByRut(rut);
+    if(citas.length === 0) {
+        return res.status(404).json({
+            message: "No se encontraron citas para el rut proporcionado",
+        });
+    }
     res.status(200).json(citas);
 }
 

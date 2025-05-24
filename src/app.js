@@ -28,9 +28,9 @@ const limiter = rateLimit({
 
 // Middlewares
 app.use(cors({
-    origin: ['https://nicodia.dev', 
-             'http://localhost:4200',
-             '*'],
+    origin: ['https://nicodia.dev',
+        'http://localhost:4200',
+        '*'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 app.use(morgan('dev'));
@@ -46,6 +46,13 @@ app.use('/pacientes', limiter, pacienteRoutes);
 app.use('/previsiones', limiter, previsionRoutes);
 app.use('/citas', citaRoutes);
 app.use('/auth', authRoutes);
+
+//Route that returns a message in /
+app.get('/', (req, res) => {
+    res.json({
+        message: 'Bienvenido a la API de la Clinica Salud Total',
+    });
+});
 
 //Error handling
 app.use((err, req, res, next) => {

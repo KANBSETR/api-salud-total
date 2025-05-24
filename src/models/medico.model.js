@@ -6,7 +6,7 @@ export const getMedico = async () => {
 };
 
 export const getMedicoByRut= async (rut) => {
-    const result = await pool.query("SELECT * FROM medico WHERE rut_medico = $1", [rut]);
+    const result = await pool.query("SELECT * FROM usuario WHERE rut = $1", [rut]);
     if (result.rowCount === 0) {
         throw new Error("Medico no encontrado");
     }
@@ -14,7 +14,7 @@ export const getMedicoByRut= async (rut) => {
 }
 
 export const getMedicoById = async (id) => {
-    const result = await pool.query("SELECT * FROM medico WHERE id_medico = $1", [id]);
+    const result = await pool.query("SELECT * FROM medico WHERE idmedico = $1", [id]);
     if (result.rowCount === 0) {
         throw new Error("Medico no encontrado");
     }
@@ -22,7 +22,7 @@ export const getMedicoById = async (id) => {
 }
 
 export const getMedicoByIdEspecialidad = async (idEspecialidad) => {
-    const result = await pool.query("SELECT * FROM medico WHERE id_especialidad = $1", [idEspecialidad]);
+    const result = await pool.query("SELECT * FROM medico WHERE idEspecialidad = $1", [idEspecialidad]);
     if (result.rowCount === 0) {
         throw new Error("Medico no encontrado");
     }
@@ -31,9 +31,9 @@ export const getMedicoByIdEspecialidad = async (idEspecialidad) => {
 
 
 export const horarioMedico = async (id) => {
-    const result = await pool.query("SELECT * FROM horario WHERE id_medico = $1", [id]);
+    const result = await pool.query("SELECT * FROM horario WHERE idmedico = $1", [id]);
     if (result.rowCount === 0) {
         throw new Error("Horario no encontrado");
     }
-    return result.rows[0];
+    return result.rows;
 }
