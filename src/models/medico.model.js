@@ -5,7 +5,7 @@ export const getMedico = async () => {
     return result;
 };
 
-export const getMedicoByRut= async (rut) => {
+export const getMedicoByRut = async (rut) => {
     const result = await pool.query("SELECT * FROM usuario WHERE rut = $1", [rut]);
     if (result.rowCount === 0) {
         throw new Error("Medico no encontrado");
@@ -31,7 +31,12 @@ export const getMedicoByIdEspecialidad = async (idEspecialidad) => {
 
 
 export const horarioMedico = async (id) => {
-    const result = await pool.query("SELECT * FROM horario WHERE idmedico = $1", [id]);
+    const query = `
+    SELECT hr.idmedico, diasemana, horainicio, horasalida
+    FROM horario hr JOIN medico md ON (hr.idmedico = md.idmedico)
+    WHERE hr.idmedico = $1;
+`
+    const result = await pool.query(query, [id]);
     if (result.rowCount === 0) {
         throw new Error("Horario no encontrado");
     }

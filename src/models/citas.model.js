@@ -58,13 +58,13 @@ export const updateCitaModel = async (cita) =>{
     return result.rows[0];
 }
 
-export const getCitasOcupadasModel = async (fecha, hora) => {
-    const result = await pool.query("SELECT * FROM cita WHERE fecha = $1 AND hora = $2", [fecha, hora]);
-    if (result.rowCount === 0) {
-        return [];
-    }
-    return result.rows;
-}
+// export const getCitasOcupadasModel = async (fecha, hora) => {
+//     const result = await pool.query("SELECT * FROM cita WHERE fecha = $1 AND hora = $2", [fecha, hora]);
+//     if (result.rowCount === 0) {
+//         return [];
+//     }
+//     return result.rows;
+// }
 
 /// ------------------ Nuevo Modulo ------------------ ///
 

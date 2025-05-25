@@ -10,7 +10,6 @@ import { rateLimit } from 'express-rate-limit';
 import especialidadRoutes from './routes/especialidad.routes.js';
 import medicoRoutes from './routes/medico.routes.js';
 import pacienteRoutes from './routes/paciente.routes.js';
-import previsionRoutes from './routes/prevision.routes.js';
 import citaRoutes from './routes/cita.routes.js';
 import authRoutes from './routes/auth.routes.js';
 
@@ -43,7 +42,6 @@ app.use('/', limiter);
 app.use('/especialidades', limiter, especialidadRoutes);
 app.use('/medicos', limiter, medicoRoutes);
 app.use('/pacientes', limiter, pacienteRoutes);
-app.use('/previsiones', limiter, previsionRoutes);
 app.use('/citas', citaRoutes);
 app.use('/auth', authRoutes);
 
