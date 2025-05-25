@@ -16,17 +16,15 @@ import { v4 } from "uuid";
 
 
 export const createCita = async (req, res) => {
-    const { fecha, hora, rut_medico, rut_paciente, id_especialidad, correo } = req.body;
+    const { fecha, horaIncio, horaTermino, rut_medico, rut_paciente, id_especialidad, correo } = req.body;
     // Crear token para la verificación de la cita
     const token = v4();
     // Obtener los datos necesarios para crear la cita
-    const medico = await getMedicoByRut(rut_medico);
-    const paciente = await getPacienteByRut(rut_paciente);
-
+    
     const especialidad = await getEspecialidadById(id_especialidad);
 
     // Almacenar la cita en la base de datos
-    const saveCita = await createCitaModel({ token, fecha, hora, id_medico: medico.id_medico, id_paciente: paciente.id_paciente });
+    const saveCita = await createCitaModel({ token, fecha, horaIncio, horaTermino });
     // Objeto con el contenido del correo
     const dataCorreo = {
         fecha: fecha,
@@ -88,7 +86,7 @@ export const getCitasByRut = async (req, res) => {
     const { rut } = req.params;
     // Obtener el paciente por rut
     const citas = await getCitasPacienteByRut(rut);
-    if(citas.length === 0) {
+    if (citas.length === 0) {
         return res.status(404).json({
             message: "No se encontraron citas para el rut proporcionado",
         });
@@ -110,7 +108,7 @@ export const updateCita = async (req, res) => {
     // Actualizar la cita en la base de datos
     const medico = await getMedicoByRut(rut_medico);
     const paciente = await getPacienteByRut(rut_paciente);
-    
+
     const especialidad = await getEspecialidadById(id_especialidad);
     const cita = await getCitaByIdCitaModel(id_cita);
     const updateCita = await updateCitaModel({ id_cita, fecha, hora, id_medico: medico.id_medico });
