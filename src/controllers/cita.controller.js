@@ -8,33 +8,36 @@ import {
     updateCitaModel,
     updateStateCitaCancelModel,
     updateStateCitaConfirmModel,
-    getCitasPacienteByRut
+    getCitasPacienteByRut,
+    getInfoForCitaMedico,
+    getInfoForCitaPaciente,
 } from "../models/citas.model.js";
 import { getPacienteByRut } from "../models/paciente.model.js";
 import { getEspecialidadById } from "../models/especialidad.model.js";
 import { v4 } from "uuid";
 
-
 export const createCita = async (req, res) => {
-    const { fecha, horaIncio, horaTermino, rut_medico, rut_paciente, id_especialidad, correo } = req.body;
+    const { fecha, horaInicio, horaTermino, correo, rutMedico, rutPaciente} = req.body;
     // Crear token para la verificación de la cita
     const token = v4();
     // Obtener los datos necesarios para crear la cita
-    
-    const especialidad = await getEspecialidadById(id_especialidad);
-
+    const medico = await getInfoForCitaMedico(rutMedico);
+    const paciente = await getInfoForCitaPaciente(rutPaciente);
+    console.log(medico);
+    console.log(paciente);
     // Almacenar la cita en la base de datos
-    const saveCita = await createCitaModel({ token, fecha, horaIncio, horaTermino });
+    const saveCita = await createCitaModel({ token, fecha, horaInicio, horaTermino, id_paciente: paciente.idpaciente, id_medico: medico.idmedico });
     // Objeto con el contenido del correo
     const dataCorreo = {
         fecha: fecha,
-        hora: hora,
-        nombre_medico: medico.primer_nombre + " " + medico.apellido_paterno,
-        especialidad: especialidad.especialidad,
-        nombre_paciente: paciente.primer_nombre,
+        hora: horaInicio,
+        nombre_medico: medico.nombre + " " + medico.appaterno + " " + medico.apmaterno,
+        especialidad: medico.nomespe,
+        nombre_paciente: paciente.nombre + " " + paciente.appaterno + " " + paciente.apmaterno,
         correo: correo,
         token: token,
     }
+    console.log(dataCorreo);
     // Enviar correo al usuario con la información de la cita
     await sendEmailCita(dataCorreo);
     // Enviar respuesta al cliente

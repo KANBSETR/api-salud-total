@@ -21,7 +21,6 @@ export const getMedicoById = async (id) => {
     return result.rows[0];
 }
 
-// MEJORAR LA CONSULTA PARA TRAER LOS DATOS DEL MÉDICO
 export const getMedicoByIdEspecialidad = async (idEspecialidad) => {
     const query = `
     SELECT md.idmedico, us.rut, us.correo, us.nombre, us.appaterno, us.apmaterno, md.idespecialidad
