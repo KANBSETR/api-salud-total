@@ -1,12 +1,23 @@
 import { pool } from '../db.js';
 
 export const getMedico = async () => {
-    const result = await pool.query('SELECT * FROM medico');
+    const query = `
+    SELECT md.idmedico, us.rut, us.correo, us.nombre, us.appaterno, us.apmaterno, md.idespecialidad
+    FROM usuario us
+    JOIN medico md ON (md.idusuario = us.idusuario);
+    `
+    const result = await pool.query(query);
     return result;
 };
 
 export const getMedicoByRut = async (rut) => {
-    const result = await pool.query("SELECT * FROM usuario WHERE rut = $1", [rut]);
+    const query = `
+    SELECT md.idmedico, us.rut, us.correo, us.nombre, us.appaterno, us.apmaterno, md.idespecialidad
+    FROM usuario us 
+    JOIN medico md ON (md.idusuario = us.idusuario)
+    WHERE us.rut = $1;
+    `
+    const result = await pool.query(query, [rut]);
     if (result.rowCount === 0) {
         throw new Error("Medico no encontrado");
     }
@@ -14,7 +25,13 @@ export const getMedicoByRut = async (rut) => {
 }
 
 export const getMedicoById = async (id) => {
-    const result = await pool.query("SELECT * FROM medico WHERE idmedico = $1", [id]);
+    const query = `
+    SELECT md.idmedico, us.rut, us.correo, us.nombre, us.appaterno, us.apmaterno, md.idespecialidad
+    FROM usuario us 
+    JOIN medico md ON (md.idusuario = us.idusuario)
+    WHERE md.idmedico = $1;
+    `
+    const result = await pool.query(query, [id]);
     if (result.rowCount === 0) {
         throw new Error("Medico no encontrado");
     }

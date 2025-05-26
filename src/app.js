@@ -11,7 +11,6 @@ import especialidadRoutes from './routes/especialidad.routes.js';
 import medicoRoutes from './routes/medico.routes.js';
 import pacienteRoutes from './routes/paciente.routes.js';
 import citaRoutes from './routes/cita.routes.js';
-import authRoutes from './routes/auth.routes.js';
 
 
 const app = express();
@@ -43,7 +42,6 @@ app.use('/especialidades', limiter, especialidadRoutes);
 app.use('/medicos', limiter, medicoRoutes);
 app.use('/pacientes', limiter, pacienteRoutes);
 app.use('/citas', citaRoutes);
-app.use('/auth', authRoutes);
 
 //Route that returns a message in /
 app.get('/', (req, res) => {

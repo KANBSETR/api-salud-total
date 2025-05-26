@@ -1,6 +1,7 @@
 import pg from 'pg';
 import { PG_USER, PG_DATABASE, PG_HOST, PG_PASSWORD, PG_PORT} from './config.js';
 
+// Local Development
 // export const pool = new pg.Pool({
 //     host: PG_HOST,
 //     user: PG_USER,
