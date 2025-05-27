@@ -62,8 +62,8 @@ export const getCitasPacienteByRut = async (rut) => {
     SELECT ci.idcita, ci.fecen, ci.horacitainicio, ci.horacitatermino, ci.idmedico, ci.token_cita
     FROM cita ci JOIN Paciente pc ON (ci.idpaciente = pc.idpaciente)
 	JOIN Usuario us ON (us.idusuario = pc.idusuario)
-	WHERE us.rut = $1;`
-    const result = await pool.query(query, [rut]);
+	WHERE us.rut = $1 AND ci.idestado = $2;`
+    const result = await pool.query(query, [rut, 2]); // 2 es el id del estado "Confirmada"
     return result.rows;
 }
 
