@@ -2,6 +2,7 @@ import { pool } from "../db.js";
 
 export const createCitaModel = async (cita) => {
     const { token, fecha, horaInicio, horaTermino, id_paciente, id_medico } = cita;
+    console.log("Datos de la cita:", cita);
     const result = await pool.query("INSERT INTO Cita (fecEn, horaCitaInicio, horaCitaTermino, motivoCita, token_cita, idMedico, idPaciente, idSeguro, idEstado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;",
         [fecha, horaInicio, horaTermino, " ", token, id_medico, id_paciente, 1, 2]
     )

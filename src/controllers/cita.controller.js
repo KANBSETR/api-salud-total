@@ -11,16 +11,33 @@ import {
     getInfoForCitaPaciente,
 } from "../models/citas.model.js";
 import { v4 } from "uuid"; // Para generar el token de la cita...
+import { parse } from 'date-fns';
 
 export const createCita = async (req, res) => {
-    const { fecha, horaInicio, horaTermino, correo, rutMedico, rutPaciente} = req.body;
+    const { fecha, horaInicio, horaTermino, correo, rutMedico, rutPaciente } = req.body;
     // Crear token para la verificación de la cita
     const token = v4();
     // Obtener los datos necesarios para crear la cita
     const medico = await getInfoForCitaMedico(rutMedico);
     const paciente = await getInfoForCitaPaciente(rutPaciente);
-    // Almacenar la cita en la base de datos
-    const saveCita = await createCitaModel({ token, fecha, horaInicio, horaTermino, id_paciente: paciente.idpaciente, id_medico: medico.idmedico });
+
+    const fechaHoraInicioStr = `${fecha} ${horaInicio}`;
+    const fechaHoraTerminoStr = `${fecha} ${horaTermino}`;
+
+    // PARSEAR las fechas y horas a objetos Date
+    const horaCitaInicio = parse(fechaHoraInicioStr, 'dd/MM/yyyy HH:mm', new Date());
+    const horaCitaTermino = parse(fechaHoraTerminoStr, 'dd/MM/yyyy HH:mm', new Date());
+    const fechaSQL = horaCitaInicio.toISOString().split('T')[0];
+
+    // Guardar en la base de datos
+    const saveCita = await createCitaModel({
+        token,
+        fecha: fechaSQL,
+        horaInicio: horaCitaInicio,
+        horaTermino: horaCitaTermino,
+        id_paciente: paciente.idpaciente,
+        id_medico: medico.idmedico
+    });
     // Objeto con el contenido del correo
     const dataCorreo = {
         fecha: fecha,
@@ -95,14 +112,30 @@ export const getCitaById = async (req, res) => {
 }
 
 export const updateCita = async (req, res) => {
-    const { id_cita } = req.params;    
-    const { fecha, horaInicio, horaTermino, correo, rutMedico, rutPaciente, motivo} = req.body;
+    const { id_cita } = req.params;
+    const { fecha, horaInicio, horaTermino, correo, rutMedico, rutPaciente, motivo } = req.body;
     // Obtener los datos necesarios para crear la cita
     const medico = await getInfoForCitaMedico(rutMedico);
     const paciente = await getInfoForCitaPaciente(rutPaciente);
     const cita = await getCitaByIdCitaModel(id_cita);
 
-    const updateCita = await updateCitaModel({fecha, horaInicio, horaTermino, id_medico: medico.idmedico, motivo, id_paciente: paciente.idpaciente, id_cita});
+    const fechaHoraInicioStr = `${fecha} ${horaInicio}`;
+    const fechaHoraTerminoStr = `${fecha} ${horaTermino}`;
+
+    // PARSEAR las fechas y horas a objetos Date
+    const horaCitaInicio = parse(fechaHoraInicioStr, 'dd/MM/yyyy HH:mm', new Date());
+    const horaCitaTermino = parse(fechaHoraTerminoStr, 'dd/MM/yyyy HH:mm', new Date());
+    const fechaSQL = horaCitaInicio.toISOString().split('T')[0];
+
+    const updateCita = await updateCitaModel({
+        fecha: fechaSQL,
+        horaInicio: horaCitaInicio,
+        horaTermino: horaCitaTermino,
+        id_medico: medico.idmedico, 
+        motivo, 
+        id_paciente: paciente.idpaciente, 
+        id_cita
+    });
 
     // Obtener la cita actualizada
     const dataCorreo = {
