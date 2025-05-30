@@ -10,9 +10,7 @@ import { rateLimit } from 'express-rate-limit';
 import especialidadRoutes from './routes/especialidad.routes.js';
 import medicoRoutes from './routes/medico.routes.js';
 import pacienteRoutes from './routes/paciente.routes.js';
-import previsionRoutes from './routes/prevision.routes.js';
 import citaRoutes from './routes/cita.routes.js';
-import authRoutes from './routes/auth.routes.js';
 
 
 const app = express();
@@ -28,7 +26,10 @@ const limiter = rateLimit({
 
 // Middlewares
 app.use(cors({
-    origin: ['http://localhost:4200', '*']
+    origin: ['https://nicodia.dev',
+        'http://localhost:4200',
+        '*'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 app.use(morgan('dev'));
 app.use(cookieParser());
@@ -40,9 +41,14 @@ app.use('/', limiter);
 app.use('/especialidades', limiter, especialidadRoutes);
 app.use('/medicos', limiter, medicoRoutes);
 app.use('/pacientes', limiter, pacienteRoutes);
-app.use('/previsiones', limiter, previsionRoutes);
 app.use('/citas', citaRoutes);
-app.use('/auth', authRoutes);
+
+//Route that returns a message in /
+app.get('/', (req, res) => {
+    res.json({
+        message: 'Bienvenido a la API de la Clinica Salud Total',
+    });
+});
 
 //Error handling
 app.use((err, req, res, next) => {

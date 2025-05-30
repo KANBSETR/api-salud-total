@@ -6,5 +6,6 @@ const router = Router();
 router.get("/", getMedicoController)
 router.get("/:rut", getMedicoByRutController)
 router.get("/horario/:id", horarioMedicoController)
-router.get("/idEspecialidad/:idEspecialidad", getMedicoByIdEspecialidadController)
+router.get("/especialidad/:idEspecialidad", getMedicoByIdEspecialidadController)
+
 export default router;
