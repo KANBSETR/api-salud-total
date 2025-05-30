@@ -12,7 +12,6 @@ import medicoRoutes from './routes/medico.routes.js';
 import pacienteRoutes from './routes/paciente.routes.js';
 import citaRoutes from './routes/cita.routes.js';
 
-
 const app = express();
 
 //Rate limiting middleware
