@@ -8,13 +8,10 @@ import {
     updateCita,
     getCitaById
 } from "../controllers/cita.controller.js";
-import { getEstados } from "../controllers/estado_EJEMPLO.controller.js";
 
 const router = Router();
 
 router.get("/", getCitas);
-
-router.get("/estados", getEstados); // SOLO PARA EFECTOS DE PRUEBA, QUITAR DESPUÉS
 
 router.get("/rut/:rut", getCitasByRut);
 

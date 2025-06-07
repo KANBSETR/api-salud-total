@@ -34,6 +34,8 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.set('view engine', 'ejs');
+app.set('views', './src/views'); // necesario para renderizar vistas con EJS ya que no toma la carpeta src por defecto
 
 //Routes
 app.use('/', limiter);
@@ -42,11 +44,10 @@ app.use('/medicos', limiter, medicoRoutes);
 app.use('/pacientes', limiter, pacienteRoutes);
 app.use('/citas', citaRoutes);
 
+
 //Route that returns a message in /
 app.get('/', (req, res) => {
-    res.json({
-        message: 'Bienvenido a la API de la Clinica Salud Total',
-    });
+    res.render('index', {name: 'API de Gestión de Citas Médicas'});
 });
 
 //Error handling

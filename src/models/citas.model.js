@@ -2,10 +2,12 @@ import { pool } from "../db.js";
 
 export const createCitaModel = async (cita) => {
     const { token, fecha, horaInicio, horaTermino, id_paciente, id_medico } = cita;
-    console.log("Datos de la cita:", cita);
-    const result = await pool.query("INSERT INTO Cita (fecEn, horaCitaInicio, horaCitaTermino, motivoCita, token_cita, idMedico, idPaciente, idSeguro, idEstado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;",
-        [fecha, horaInicio, horaTermino, " ", token, id_medico, id_paciente, 1, 2]
-    )
+    const query = `
+        INSERT INTO citas (fec_en, hora_cita_inicio, hora_cita_termino, motivo_cita, token_cita, id_medico, id_paciente, id_seguro, id_estado)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
+    `;
+
+    const result = await pool.query(query, [fecha, horaInicio, horaTermino, " ", token, id_medico, id_paciente, 1, 1])
     if (result.rowCount === 0) {
         throw new Error("Error al crear la cita");
     }
@@ -13,12 +15,16 @@ export const createCitaModel = async (cita) => {
 }
 
 export const getCitasModel = async () => {
-    const result = await pool.query("SELECT * FROM cita");
+    const query = `
+        SELECT id_cita, fec_en, hora_cita_inicio, hora_cita_termino, id_medico, token_cita
+        FROM citas;
+        `;
+    const result = await pool.query(query);
     return result.rows;
 }
 
 export const updateStateCitaConfirmModel = async (token_cita) => {
-    const result = await pool.query("UPDATE cita SET idestado = $1 WHERE token_cita = $2 RETURNING *;", [2, token_cita]);
+    const result = await pool.query("UPDATE citas SET id_estado = $1 WHERE token_cita = $2 RETURNING *;", [2, token_cita]);
     if (result.rowCount === 0) {
         throw new Error("Error al actualizar el estado de la cita");
     }
@@ -26,7 +32,7 @@ export const updateStateCitaConfirmModel = async (token_cita) => {
 }
 
 export const updateStateCitaCancelModel = async (token_cita) => {
-    const result = await pool.query("UPDATE cita SET idestado = $1 WHERE token_cita = $2 RETURNING *;", [3, token_cita]);
+    const result = await pool.query("UPDATE citas SET id_estado = $1 WHERE token_cita = $2 RETURNING *;", [3, token_cita]);
     if (result.rowCount === 0) {
         throw new Error("Error al actualizar el estado de la cita");
     }
@@ -34,7 +40,12 @@ export const updateStateCitaCancelModel = async (token_cita) => {
 }
 
 export const getCitaByIdCitaModel = async (id_cita) => {
-    const result = await pool.query("SELECT * FROM cita WHERE idcita = $1", [id_cita]);
+    const query = `
+        SELECT id_cita, fec_en, hora_cita_inicio, hora_cita_termino, id_medico, token_cita
+        FROM citas
+        WHERE id_cita = $1;
+    `;
+    const result = await pool.query(query, [id_cita]);
     if (result.rowCount === 0) {
         throw new Error("No se encontraron citas para el id proporcionado");
     }
@@ -44,8 +55,8 @@ export const getCitaByIdCitaModel = async (id_cita) => {
 export const updateCitaModel = async (cita) => {
     const { fecha, horaInicio, horaTermino, id_medico, motivo, id_paciente, id_cita } = cita;
     const query = `
-        UPDATE cita SET fecen = $1, horacitainicio = $2, horacitatermino = $3, motivocita = $4, idmedico = $5, idpaciente = $6, idestado = $7
-        WHERE idcita = $8 RETURNING *;
+        UPDATE citas SET fec_en = $1, hora_cita_inicio = $2, hora_cita_termino = $3, motivo_cita = $4, id_medico = $5, id_paciente = $6, id_estado = $7
+        WHERE id_cita = $8 RETURNING *;
         `;
     const result = await pool.query(query, [fecha, horaInicio, horaTermino, motivo, id_medico, id_paciente,1, id_cita]); // 1 es el id del estado "Pendiente"
     if (result.rowCount === 0) {
@@ -59,21 +70,23 @@ export const updateCitaModel = async (cita) => {
 // Obtener las citas de un paciente según el rut
 export const getCitasPacienteByRut = async (rut) => {
     const query = `
-    SELECT ci.idcita, ci.fecen, ci.horacitainicio, ci.horacitatermino, ci.idmedico, ci.token_cita
-    FROM cita ci JOIN Paciente pc ON (ci.idpaciente = pc.idpaciente)
-	JOIN Usuario us ON (us.idusuario = pc.idusuario)
-	WHERE us.rut = $1 AND ci.idestado = $2;`
-    const result = await pool.query(query, [rut, 2]); // 2 es el id del estado "Confirmada"
+    SELECT ci.id_cita, ci.fec_en, ci.hora_cita_inicio, ci.hora_cita_termino, ci.id_medico, ci.token_cita
+    FROM citas ci 
+    JOIN pacientes pc ON (ci.id_paciente = pc.id_paciente)
+    JOIN usuarios us ON (us.id_usuario = pc.id_usuario)
+    WHERE us.rut = $1 AND ci.id_estado = $2;
+    `;
+    const result = await pool.query(query, [rut, 1]);
     return result.rows;
 }
 
 
 export const getInfoForCitaMedico = async (rutMedico) => {
     const query = `
-    SELECT md.idmedico, us.nombre, us.appaterno, us.apmaterno, esp.nomespe
-    FROM usuario us 
-    JOIN medico md ON(us.idusuario = md.idusuario)
-    JOIN especialidad esp ON(md.idespecialidad = esp.idespecialidad)
+    SELECT md.id_medico, us.nombre, us.ap_paterno, us.ap_materno, esp.nom_espe
+    FROM usuarios us 
+    JOIN medicos md ON(us.id_usuario = md.id_usuario)
+    JOIN especialidades esp ON(md.id_especialidad = esp.id_especialidad)
     WHERE us.rut = $1;
     `
     const result = await pool.query(query, [rutMedico]);
@@ -85,9 +98,9 @@ export const getInfoForCitaMedico = async (rutMedico) => {
 
 export const getInfoForCitaPaciente = async (rutPaciente) => {
     const query = `
-    SELECT pc.idpaciente, us.nombre, us.appaterno, us.apmaterno
-    FROM usuario us 
-    JOIN paciente pc ON(us.idusuario = pc.idusuario)
+    SELECT pc.id_paciente, us.nombre, us.ap_paterno, us.ap_materno
+    FROM usuarios us 
+    JOIN pacientes pc ON(us.id_usuario = pc.id_usuario)
     WHERE us.rut = $1;
     `
     const result = await pool.query(query, [rutPaciente]);
