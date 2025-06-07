@@ -11,7 +11,7 @@ import {
     getInfoForCitaPaciente,
 } from "../models/citas.model.js";
 import { v4 } from "uuid"; // Para generar el token de la cita...
-import { parse } from 'date-fns';
+// import { parse } from 'date-fns';
 
 export const createCita = async (req, res) => {
     const { fecha, horaInicio, horaTermino, correo, rutMedico, rutPaciente } = req.body;
@@ -21,30 +21,30 @@ export const createCita = async (req, res) => {
     const medico = await getInfoForCitaMedico(rutMedico);
     const paciente = await getInfoForCitaPaciente(rutPaciente);
 
-    const fechaHoraInicioStr = `${fecha} ${horaInicio}`;
-    const fechaHoraTerminoStr = `${fecha} ${horaTermino}`;
+    // const fechaHoraInicioStr = `${fecha} ${horaInicio}`;
+    // const fechaHoraTerminoStr = `${fecha} ${horaTermino}`;
 
-    // PARSEAR las fechas y horas a objetos Date
-    const horaCitaInicio = parse(fechaHoraInicioStr, 'dd/MM/yyyy HH:mm', new Date());
-    const horaCitaTermino = parse(fechaHoraTerminoStr, 'dd/MM/yyyy HH:mm', new Date());
-    const fechaSQL = horaCitaInicio.toISOString().split('T')[0];
+    // // PARSEAR las fechas y horas a objetos Date
+    // const horaCitaInicio = parse(fechaHoraInicioStr, 'dd/MM/yyyy HH:mm', new Date());
+    // const horaCitaTermino = parse(fechaHoraTerminoStr, 'dd/MM/yyyy HH:mm', new Date());
+    // const fechaSQL = horaCitaInicio.toISOString().split('T')[0];
 
     // Guardar en la base de datos
     const saveCita = await createCitaModel({
         token,
-        fecha: fechaSQL,
-        horaInicio: horaCitaInicio,
-        horaTermino: horaCitaTermino,
-        id_paciente: paciente.idpaciente,
-        id_medico: medico.idmedico
+        fecha: fecha,
+        horaInicio: horaInicio,
+        horaTermino: horaTermino,
+        id_paciente: paciente.id_paciente,
+        id_medico: medico.id_medico
     });
     // Objeto con el contenido del correo
     const dataCorreo = {
         fecha: fecha,
         hora: horaInicio,
-        nombre_medico: medico.nombre + " " + medico.appaterno + " " + medico.apmaterno,
-        especialidad: medico.nomespe,
-        nombre_paciente: paciente.nombre + " " + paciente.appaterno + " " + paciente.apmaterno,
+        nombre_medico: medico.nombre + " " + medico.ap_paterno + " " + medico.ap_materno,
+        especialidad: medico.nom_espe,
+        nombre_paciente: paciente.nombre + " " + paciente.ap_paterno + " " + paciente.ap_materno,
         correo: correo,
         token: token,
     }
@@ -119,21 +119,21 @@ export const updateCita = async (req, res) => {
     const paciente = await getInfoForCitaPaciente(rutPaciente);
     const cita = await getCitaByIdCitaModel(id_cita);
 
-    const fechaHoraInicioStr = `${fecha} ${horaInicio}`;
-    const fechaHoraTerminoStr = `${fecha} ${horaTermino}`;
+    // const fechaHoraInicioStr = `${fecha} ${horaInicio}`;
+    // const fechaHoraTerminoStr = `${fecha} ${horaTermino}`;
 
-    // PARSEAR las fechas y horas a objetos Date
-    const horaCitaInicio = parse(fechaHoraInicioStr, 'dd/MM/yyyy HH:mm', new Date());
-    const horaCitaTermino = parse(fechaHoraTerminoStr, 'dd/MM/yyyy HH:mm', new Date());
-    const fechaSQL = horaCitaInicio.toISOString().split('T')[0];
+    // // PARSEAR las fechas y horas a objetos Date
+    // const horaCitaInicio = parse(fechaHoraInicioStr, 'dd/MM/yyyy HH:mm', new Date());
+    // const horaCitaTermino = parse(fechaHoraTerminoStr, 'dd/MM/yyyy HH:mm', new Date());
+    // const fechaSQL = horaCitaInicio.toISOString().split('T')[0];
 
     const updateCita = await updateCitaModel({
-        fecha: fechaSQL,
-        horaInicio: horaCitaInicio,
-        horaTermino: horaCitaTermino,
-        id_medico: medico.idmedico, 
+        fecha: fecha,
+        horaInicio: horaInicio,
+        horaTermino: horaTermino,
+        id_medico: medico.id_medico, 
         motivo, 
-        id_paciente: paciente.idpaciente, 
+        id_paciente: paciente.id_paciente, 
         id_cita
     });
 
@@ -141,9 +141,9 @@ export const updateCita = async (req, res) => {
     const dataCorreo = {
         fecha: fecha,
         hora: horaInicio,
-        nombre_medico: medico.nombre + " " + medico.appaterno + " " + medico.apmaterno,
-        especialidad: medico.nomespe,
-        nombre_paciente: paciente.nombre + " " + paciente.appaterno + " " + paciente.apmaterno,
+        nombre_medico: medico.nombre + " " + medico.ap_paterno + " " + medico.ap_materno,
+        especialidad: medico.nom_espe,
+        nombre_paciente: paciente.nombre + " " + paciente.ap_paterno + " " + paciente.ap_materno,
         correo: correo,
         token: cita.token_cita,
     }
