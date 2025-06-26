@@ -14,15 +14,15 @@ import { v4 } from "uuid"; // Para generar el token de la cita...
 // import { parse } from 'date-fns';
 
 export const createCita = async (req, res) => {
-    const { fecha, horaInicio, horaTermino, correo, rutMedico, rutPaciente } = req.body;
+    const { fecha, hora_inicio, hora_termino, correo, rutMedico, rutPaciente } = req.body;
     // Crear token para la verificación de la cita
     const token = v4();
     // Obtener los datos necesarios para crear la cita
     const medico = await getInfoForCitaMedico(rutMedico);
     const paciente = await getInfoForCitaPaciente(rutPaciente);
 
-    // const fechaHoraInicioStr = `${fecha} ${horaInicio}`;
-    // const fechaHoraTerminoStr = `${fecha} ${horaTermino}`;
+    const hora_inicio1 = `${fecha} ${hora_inicio}`;
+    const hora_termino1 = `${fecha} ${hora_termino}`;
 
     // // PARSEAR las fechas y horas a objetos Date
     // const horaCitaInicio = parse(fechaHoraInicioStr, 'dd/MM/yyyy HH:mm', new Date());
@@ -33,15 +33,15 @@ export const createCita = async (req, res) => {
     const saveCita = await createCitaModel({
         token,
         fecha: fecha,
-        horaInicio: horaInicio,
-        horaTermino: horaTermino,
+        hora_inicio: hora_inicio1,
+        hora_termino: hora_termino1,
         id_paciente: paciente.id_paciente,
         id_medico: medico.id_medico
     });
     // Objeto con el contenido del correo
     const dataCorreo = {
         fecha: fecha,
-        hora: horaInicio,
+        hora: hora_inicio,
         nombre_medico: medico.nombre + " " + medico.ap_paterno + " " + medico.ap_materno,
         especialidad: medico.nom_espe,
         nombre_paciente: paciente.nombre + " " + paciente.ap_paterno + " " + paciente.ap_materno,
@@ -131,9 +131,9 @@ export const updateCita = async (req, res) => {
         fecha: fecha,
         horaInicio: horaInicio,
         horaTermino: horaTermino,
-        id_medico: medico.id_medico, 
-        motivo, 
-        id_paciente: paciente.id_paciente, 
+        id_medico: medico.id_medico,
+        motivo,
+        id_paciente: paciente.id_paciente,
         id_cita
     });
 

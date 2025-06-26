@@ -1,13 +1,13 @@
 import { pool } from "../db.js";
 
 export const createCitaModel = async (cita) => {
-    const { token, fecha, horaInicio, horaTermino, id_paciente, id_medico } = cita;
+    const { token, fecha, hora_inicio, hora_termino, id_paciente, id_medico } = cita;
     const query = `
         INSERT INTO citas (fec_en, hora_cita_inicio, hora_cita_termino, motivo_cita, token_cita, id_medico, id_paciente, id_seguro, id_estado)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
     `;
 
-    const result = await pool.query(query, [fecha, horaInicio, horaTermino, " ", token, id_medico, id_paciente, 1, 1])
+    const result = await pool.query(query, [fecha, hora_inicio, hora_termino, " ", token, id_medico, id_paciente, 1, 1])
     if (result.rowCount === 0) {
         throw new Error("Error al crear la cita");
     }
